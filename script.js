@@ -1,3 +1,5 @@
+// const { Children } = require("react");
+
 const subjects = ['I', 'You', 'He', 'She', 'We', 'They', 'My friend', 'The team', 'Our teacher'];
 const verbs = ['like', 'hate','love', 'saw', 'built', 'fixed', 'found', 'lost', 'sent', 'received', 'remember'];
 const objects = ['a book', 'the message', 'the code', 'the dog', 'my phone', 'a solution', 'the error', 'a file'];
@@ -6,29 +8,33 @@ const objects = ['a book', 'the message', 'the code', 'the dog', 'my phone', 'a 
 const messages=[]; // array of strings
 const invertedIndex={} // map of words, set of indices
 
-for(let sub of subjects){
-    for (let verb of verbs){
-        for(let obj of objects){
-            sentence=sub+" "+verb+" "+obj;
-            messages.push(sentence);
-        }
-    }
+const search=document.querySelector("#search");
+
+// for(let sub of subjects){
+//     for (let verb of verbs){
+//         for(let obj of objects){
+//             sentence=sub+" "+verb+" "+obj;
+//             messages.push(sentence);
+//         }
+//     }
+// }
+
+// messages.push("I hate hate so much");
+
+// messages.push("I hate hate so much hate");
+
+function tokenization(){
+
+    messages.forEach((sentence, index)=>{
+        words=sentence.split(" ");
+        words.forEach((word)=>{
+            if(!invertedIndex[word]) invertedIndex[word] = new Set();
+            invertedIndex[word].add(index);
+        })
+    });
 }
+    
 
-messages.push("I hate hate so much");
-
-messages.push("I hate hate so much hate");
-messages.forEach((sentence, index)=>{
-    words=sentence.split(" ");
-    words.forEach((word)=>{
-        if(!invertedIndex[word]) invertedIndex[word] = new Set();
-        invertedIndex[word].add(index);
-    })
-});
-
-
-
-const input=document.querySelector("#input");
 const suggestions=document.querySelector("#suggestions");
 
 function LPS(str){ // return the LPS array for the given string
@@ -69,7 +75,7 @@ function KMP(pattern, sentence) {
 }
 
 function generateFilteredChats(){
-    const word=input.value;
+    const word=search.value;
     if(invertedIndex[word]==undefined) console.log("Word not present");
     else{
         let filteredChats=[];
@@ -118,5 +124,18 @@ function generateFilteredChats(){
         
     }
 }
+
+const chats =document.querySelector("#chats");
+console.log(chats);
+
+(function loadData(){
+    for(let child of chats.children){
+        messages.push(child.innerText);
+    }
+    tokenization();
+})()
+console.log(messages);
+
+
 
 
