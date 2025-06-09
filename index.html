@@ -10,48 +10,57 @@
         margin: 0;
         padding: 0;
     }
+    body{
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
     header{
-         background-color: rgb(22 163 74);
+        background-color: rgb(22 163 74);
     }
     #alice{
         background-color: rgb(36, 205, 84);
         color: white;
-        padding: 2%;
+        padding: 1%;
         width: 35%;
         border-radius: 5% 5% 5% 2%;
     }
     #bob{
-        padding: 2%;
+        padding: 1%;
         border-radius: 5% 5% 2% 5%;
         width: 35%;
         margin-left: 65%;
     }
     #chats{
-        height: 65%;
+        height: 60vh;
+        /* height: 63.5vh; */
     }
     #newMsg{
-        width: 99%;
+        width: 97.5vw;
     }
+    /* footer{
+        width: 97.5vw;
+    } */
 </style>
 </head>
 <body>
-    <div>
+    <div id="container">
         <header class="text-center h-25">
             <h1 class="text-white pt-3 mb-2 fs-3 fw-bold-medium ">ChitChat search</h1>
             <div class="input-group w-50 mx-auto rounded-pill shadow-sm">
                 <span class="input-group-text border border-0 bg-white">
                     <i class="bi bi-search bg"></i>
                 </span>
-                <input id="search" type="text" class="form-control border-0">
+                <input id="search" type="text" class="form-control border-0" onkeyup="highlightFilteredChats()">
             </div>
             <button class="btn btn-warning mt-2 fs-6 text-dark">
                     <span class="bi bi-plus"></span>
                     Generate Chat
             </button>
         </header>
-        <main id="chats" class="bg-light p-3 overflow-auto">
+        <main id="chats" class="bg-light p-3 overflow-y-scroll">
             <div id="alice" class="">
-                <h3>Alice</h3>
+                <h3 class="d-hidden">Alice</h3>
                 <p>Hey Bob! How was your weekend trip to the mountains?</p>
                 <span class="bi bi-clock">10:32 AM</span>
             </div>
@@ -71,8 +80,11 @@
                 <span class="bi bi-clock">10:32 AM</span>
             </div>
         </main>
-        <footer class="">
-            <input id="newMsg" type="text" placeholder="Type a message as Bob..." class="form-control p-2 rounded-pill m-2">
+        <footer>
+            <input id="newMsg" type="text" placeholder="Type a message as Bob..." class="form-control rounded-pill m-3 mb-0">
+            <div id="msg" class="bg-warning-subtle text-center w-100 border border-2 border-warning-subtle p-1 d-none">
+            Found 1 message containing 
+            </div>
         </footer>
     </div>
     <script src="./script.js"></script>
