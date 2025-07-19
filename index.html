@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -51,9 +52,10 @@
                 <span class="input-group-text border border-0 bg-white">
                     <i class="bi bi-search bg"></i>
                 </span>
-                <input id="search" type="text" class="form-control border-0" onkeyup="highlightFilteredChats()">
+                <input id="search" type="text" class="form-control border-0">
+                <button class="btn btn-primary" onclick="highlightFilteredChats()">search</button>
             </div>
-            <button class="btn btn-warning mt-2 fs-6 text-dark">
+            <button class="btn btn-warning m-2 fs-6 text-dark">
                     <span class="bi bi-plus"></span>
                     Generate Chat
             </button>
