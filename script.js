@@ -1,36 +1,23 @@
-const subjects = ['I', 'You', 'He', 'She', 'We', 'They', 'My friend', 'The team', 'Our teacher'];
-const verbs = ['like', 'hate','love', 'saw', 'built', 'fixed', 'found', 'lost', 'sent', 'received', 'remember'];
-const objects = ['a book', 'the message', 'the code', 'the dog', 'my phone', 'a solution', 'the error', 'a file'];
+// const { Children } = require("react");
 
 
 const messages=[]; // array of strings
 const invertedIndex={} // map of words, set of indices
 
-for(let sub of subjects){
-    for (let verb of verbs){
-        for(let obj of objects){
-            sentence=sub+" "+verb+" "+obj;
-            messages.push(sentence);
-        }
-    }
+const search=document.querySelector("#search");
+const msg=document.querySelector("#msg");
+const chats=document.querySelector("#chats");
+
+function tokenization(){
+    messages.forEach((sentence, index)=>{
+        words=sentence.toLowerCase().split(/[\s\W]+/).filter(Boolean);
+        words.forEach((word)=>{
+            if(!invertedIndex[word]) invertedIndex[word] = new Set();
+            invertedIndex[word].add(index);
+        })
+    });
 }
-
-messages.push("I hate hate so much");
-
-messages.push("I hate hate so much hate");
-messages.forEach((sentence, index)=>{
-    words=sentence.split(" ");
-    words.forEach((word)=>{
-        if(!invertedIndex[word]) invertedIndex[word] = new Set();
-        invertedIndex[word].add(index);
-    })
-});
-
-
-
-const input=document.querySelector("#input");
-const suggestions=document.querySelector("#suggestions");
-
+    
 function LPS(str){ // return the LPS array for the given string
     const LPSarray=new Array(str.length);    
     LPSarray[0]=0;
@@ -50,8 +37,12 @@ function LPS(str){ // return the LPS array for the given string
 
 function KMP(pattern, sentence) {
     let str=pattern+'@'+sentence, m=pattern.length;    
+    // console.log(str);
+    
     LPSarray=LPS(str);
-    position=[], filteredChats=[];
+    // console.log(LPSarray);
+    
+    position=[];
     LPSarray.forEach((val, ind)=>{
         if(val==m) {
             position.push({"start": ind-2*m, "end":ind-m-1});
@@ -60,63 +51,57 @@ function KMP(pattern, sentence) {
     position.sort((a,b)=>{
         return a["start"]-b["start"];
     });
-    filteredChats.push(sentence, position);
-    // console.log(filteredChats);
-    // console.log("\n");
-    
-    
-    return filteredChats;
+    return position;
 }
 
-function generateFilteredChats(){
-    const word=input.value;
-    if(invertedIndex[word]==undefined) console.log("Word not present");
-    else{
-        let filteredChats=[];
-        for(let index of invertedIndex[word])
-        {
-            filteredChats.push(KMP(word, messages[index], filteredChats));
+function highlightedText(sentence, position, index){
+    let color=(index%2==0)? "yellow":"green";
+    let newSentence=sentence.slice(0, position[0]["start"]);
+    for(let i=0;i<position.length;i++){
+        newSentence+=sentence.slice(position[i]["start"], position[i]["end"] +1).fontcolor(color).bold();
+        if(i+1<position.length) newSentence+=sentence.slice(position[i]["end"]+1, position[i+1]["start"]);
+    }
+    newSentence+=sentence.slice(position[position.length-1]["end"]+1, sentence.length-1);
+    return newSentence;
+}
+
+function highlightFilteredChats(){
+    const word=search.value.trim();
+    updateData();
+    if(word){
+        msg.classList.remove("d-none");
+        chats.style.height="60vh";
+        if(invertedIndex[word]==undefined) {
+            msg.textContent=`No messages found containing "${word}"`;
         }
-        // console.log(filteredChats[0]);
-        
-        filteredChats.sort((a,b)=>{
-            return b[1].length-a[1].length;
-        });
-                // console.log(filteredChats[0]);
-
-        for(chats of filteredChats){
-            let div=document.createElement("div");
-            let p=document.createElement("p");
-            let chat=chats[0];
-            p.className="my-auto fw-semibold";
-            // console.log(chats.slice(0, chats[1][0][0]));
-            // console.log(chats[1][0]);
-            
-            p.innerHTML=chat.slice(0, chats[1][0]["start"]);     
-            console.log(p.textContent);
-                   
-            for(let i=0;i<chats[1].length;i++){
-                startIndex=chats[1][i]["start"];
-                endIndex=chats[1][i]["end"];
-                span=document.createElement("span");
-                span.textContent=chat.slice(startIndex, endIndex+1);
-                span.className="text-success";
-                console.log(span);
-                p.append(span);
-                p.innerHTML+=chat.slice(endIndex+1, chats[1][i+1]?.["start"]??chat[1].end);
-            }
-
-            div.append(p);
-            let btn=document.createElement("button");
-            btn.className="btn btn-primary rounded-pill";
-            btn.textContent=`${chats[1].length} frequency`;
-            div.append(btn);
-            div.className="rounded rounded-4 mt-2 p-3 d-flex justify-content-between shadow";
-            suggestions.append(div);
+        else{
+            let wordFreq=0;
+            for(let index of invertedIndex[word])
+            {   
+                let sentence=chats.children[index].children[1].innerHTML;   
+                let position=KMP(word, sentence.toLowerCase());  
+                wordFreq+=position.length;
+                chats.children[index].children[1].innerHTML=highlightedText(sentence, position, index);
+           }           
+            msg.textContent=`${wordFreq} messages found containing "${word}"`;
         }
-
-        
     }
 }
+
+(function loadData(){
+    for(let child of chats.children){
+        messages.push(child.children[1].textContent);
+    }
+    tokenization();
+})()
+
+function updateData(){
+    messages.forEach((sentence, index)=>{
+        chats.children[index].children[1].innerHTML=sentence;
+    })
+}
+// console.log(chats.children[0].children[1].textContent);
+
+
 
 
