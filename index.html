@@ -33,11 +33,11 @@
         margin-left: 65%;
     }
     #chats{
-        height: 60vh;
-        /* height: 63.5vh; */
+        /* height: 55vh; */
+        height: 61.5vh;
     }
     #newMsg{
-        width: 97.5vw;
+        width: 97.5vw;   
     }
     /* footer{
         width: 97.5vw;
@@ -46,7 +46,7 @@
 </head>
 <body>
     <div id="container">
-        <header class="text-center h-25">
+        <header class="text-center">
             <h1 class="text-white pt-3 mb-2 fs-3 fw-bold-medium ">ChitChat search</h1>
             <div class="input-group w-50 mx-auto rounded-pill shadow-sm">
                 <span class="input-group-text border border-0 bg-white">
@@ -55,7 +55,7 @@
                 <input id="search" type="text" class="form-control border-0">
                 <button class="btn btn-primary" onclick="highlightFilteredChats()">search</button>
             </div>
-            <button class="btn btn-warning m-2 fs-6 text-dark">
+            <button id="genChatBtn" class="btn btn-warning m-2 fs-6 text-dark" onclick="generateChat()">
                     <span class="bi bi-plus"></span>
                     Generate Chat
             </button>
@@ -83,8 +83,8 @@
             </div>
         </main>
         <footer>
-            <input id="newMsg" type="text" placeholder="Type a message as Bob..." class="form-control rounded-pill m-3 mb-0">
-            <div id="msg" class="bg-warning-subtle text-center w-100 border border-2 border-warning-subtle p-1 d-none">
+            <input id="newMsg" type="text" placeholder="Type a message as Bob..." class="form-control rounded-pill m-3 mb-0" onkeyup="newMsgGenerator()">
+            <div id="msg" class="bg-warning-subtle text-center w-100 border border-2 border-warning-subtle mt-2 p-1 d-none">
             Found 1 message containing 
             </div>
         </footer>

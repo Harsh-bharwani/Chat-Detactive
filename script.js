@@ -70,7 +70,7 @@ function highlightFilteredChats(){
     updateData();
     if(word){
         msg.classList.remove("d-none");
-        chats.style.height="60vh";
+        chats.style.height="55vh";
         if(invertedIndex[word]==undefined) {
             msg.textContent=`No messages found containing "${word}"`;
         }
@@ -100,8 +100,9 @@ function updateData(){
         chats.children[index].children[1].innerHTML=sentence;
     })
 }
-// console.log(chats.children[0].children[1].textContent);
 
+// function generateChat(){
 
+// }
 
-
+// function newmessage
