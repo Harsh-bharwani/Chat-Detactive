@@ -4,45 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<style>
-    *{
-        margin: 0;
-        padding: 0;
-    }
-    body{
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-    }
-    header{
-        background-color: rgb(22 163 74);
-    }
-    #alice{
-        background-color: rgb(36, 205, 84);
-        color: white;
-        padding: 1%;
-        width: 35%;
-        border-radius: 5% 5% 5% 2%;
-    }
-    #bob{
-        padding: 1%;
-        border-radius: 5% 5% 2% 5%;
-        width: 35%;
-        margin-left: 65%;
-    }
-    #chats{
-        /* height: 55vh; */
-        height: 61.5vh;
-    }
-    #newMsg{
-        width: 97.5vw;   
-    }
-    /* footer{
-        width: 97.5vw;
-    } */
-</style>
 </head>
 <body>
     <div id="container">
@@ -50,45 +14,97 @@
             <h1 class="text-white pt-3 mb-2 fs-3 fw-bold-medium ">ChitChat search</h1>
             <div class="input-group w-50 mx-auto rounded-pill shadow-sm">
                 <span class="input-group-text border border-0 bg-white">
-                    <i class="bi bi-search bg"></i>
+                    <i class="bi bi-search"></i>
                 </span>
-                <input id="search" type="text" class="form-control border-0">
-                <button class="btn btn-primary" onclick="highlightFilteredChats()">search</button>
+                <input autofocus id="search" type="text" class="bi bi-search form-control border-0" onkeyup="debounce(highlightFilteredChats)">
             </div>
-            <button id="genChatBtn" class="btn btn-warning m-2 fs-6 text-dark" onclick="generateChat()">
+            <button type="button" id="genChatBtn" class="btn btn-warning m-2 fs-6 text-dark" data-bs-toggle="modal" data-bs-target="#generateChatModal">
                     <span class="bi bi-plus"></span>
                     Generate Chat
             </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="generateChatModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Generating New Chat</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                    <div class="form-floating">
+                      <textarea class="form-control" placeholder="Leave a comment here" id="newChat" style="height: 100px" required oninput="debounce(validateText)"></textarea >
+                      <label for="newChat">New Chat</label>
+                    </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="genAliceChat()" disabled>Send as Alice</button>
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="genBobChat()" disabled>Send as Bob</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         </header>
         <main id="chats" class="bg-light p-3 overflow-y-scroll">
-            <div id="alice" class="">
-                <h3 class="d-hidden">Alice</h3>
-                <p>Hey Bob! How was your weekend trip to the mountains?</p>
-                <span class="bi bi-clock">10:32 AM</span>
-            </div>
-            <div id="bob" class="bg-white mt-3">
-                <h3>Bob</h3>
-                <p>It was absolutely amazing! The hiking trails were breathtaking. We reached the summit just as the sun was setting.</p>
-                <span class="bi bi-clock">10:32 AM</span>
-            </div>
-            <div id="alice" class="">
+            <div id="alice" class="mb-3">
                 <h3>Alice</h3>
                 <p>Hey Bob! How was your weekend trip to the mountains?</p>
-                <span class="bi bi-clock">10:32 AM</span>
+                <span class="bi bi-check2-all text-primary"></span><span>10:32 AM</span>
             </div>
-            <div id="bob" class="bg-white mt-3">
+            <div id="bob" class="bg-white mb-3">
                 <h3>Bob</h3>
                 <p>It was absolutely amazing! The hiking trails were breathtaking. We reached the summit just as the sun was setting.</p>
-                <span class="bi bi-clock">10:32 AM</span>
+                <span class="bi bi-check2-all text-primary"></span><span>10:32 AM</span>
+            </div>
+            <div id="alice" class="mb-3">
+                <h3>Alice</h3>
+                <p>That sounds incredible! Did you take any photos?</p>
+                <span class="bi bi-check2-all text-primary"></span><span>10:32 AM</span>
+            </div>
+            <div id="bob" class="bg-white mb-3">
+                <h3>Bob</h3>
+                <p>Of course! I took hundreds of photos. The view from the top was spectacular. I\'ll share them with you later.</p>
+                <span class="bi bi-check2-all text-primary"></span><span>10:32 AM</span>
+            </div>
+            <div id="alice" class="mb-3">
+                <h3>Alice</h3>
+                <p>Can't wait to see them! By the way, are you free for lunch tomorrow? I want to discuss the new project./p>
+                <span class="bi bi-check2-all text-primary"></span><span>10:32 AM</span>
+            </div>
+            <div id="bob" class="bg-white mb-3">
+                <h3>Bob</h3>
+                <p>Sure! How about that Italian restaurant we went to last month? Their pasta was delicious.</p>
+                <span class="bi bi-check2-all text-primary"></span><span>10:32 AM</span>
+            </div>
+            <div id="alice" class="mb-3">
+                <h3>Alice</h3>
+                <p>Perfect! Let's meet at 1 PM. I have some exciting ideas about the mobile app development.</p>
+                <span class="bi bi-check2-all text-primary"></span><span>10:32 AM</span>
+            </div>
+            <div id="bob" class="bg-white mb-3">
+                <h3>Bob</h3>
+                <p>Great! I've been working on some wireframes for the user interface. I think you'll love the design concepts.</p>
+                <span class="bi bi-check2-all text-primary"></span><span>10:32 AM</span>
+            </div>
+            <div id="alice" class="mb-3">
+                <h3>Alice</h3>
+                <p>That's fantastic! Our collaboration always produces the best results. See you tomorrow!</p>
+                <span class="bi bi-check2-all text-primary"></span><span>10:32 AM</span>
             </div>
         </main>
         <footer>
-            <input id="newMsg" type="text" placeholder="Type a message as Bob..." class="form-control rounded-pill m-3 mb-0" onkeyup="newMsgGenerator()">
+            <div class="input-group m-3" id="newMsg" >
+                <input id="footerInput" type="text" placeholder="Type a message as Bob..." class="form-control">
+                <button id="footerInputBtn" class="bi bi-send btn btn-primary" type="button" onclick="toggle()"></button>
+            </div>
             <div id="msg" class="bg-warning-subtle text-center w-100 border border-2 border-warning-subtle mt-2 p-1 d-none">
             Found 1 message containing 
             </div>
         </footer>
     </div>
     <script src="./script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
 </body>
 </html>
